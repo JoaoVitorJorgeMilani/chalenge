@@ -2,8 +2,9 @@ using FluentValidation;
 using Main.Utils;
 using MongoDB.Bson;
 
-namespace Main.App.Domain.Bike 
+namespace Main.App.Domain.Bike
 {
+    //TODO incluir logger
     public class BikeService : IBikeService
     {
         private readonly IBikeRepository repository;
@@ -28,12 +29,12 @@ namespace Main.App.Domain.Bike
             }
 
             //Verify unique plate
-            if (repository.Get(new BikeFilterModel { LicensePlate = bike.LicensePlate}).Count > 0)
+            if (repository.Get(new BikeFilterModel { LicensePlate = bike.LicensePlate }).Count > 0)
             {
                 throw new ValidationException("License plate already exists");
             }
-            
-            repository.Add(bike);         
+
+            repository.Add(bike);
         }
 
         public List<BikeDto> Get(BikeFilterModel filter)
@@ -44,18 +45,19 @@ namespace Main.App.Domain.Bike
 
         public bool Delete(string encryptedId)
         {
-            
+
             return repository.Delete(this.encryptor.DecryptObjectId(encryptedId));
         }
 
-        public bool Edit(string encryptedId, string licensePlate) 
+        public bool Edit(string encryptedId, string licensePlate)
         {
-            if(string.IsNullOrEmpty(licensePlate) || licensePlate.Length != 7){
+            if (string.IsNullOrEmpty(licensePlate) || licensePlate.Length != 7)
+            {
                 throw new ValidationException("Invalid LicensePlate");
             }
 
             ObjectId id = encryptor.DecryptObjectId(encryptedId);
-            
+
             return repository.Edit(id, licensePlate);
         }
 

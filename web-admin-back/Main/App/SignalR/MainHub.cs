@@ -16,15 +16,15 @@ namespace Main.App.SignalR
             await Clients.All.SendAsync("Streaming", testestr);
         }
 
-        
+
 
         public override async Task OnConnectedAsync()
         {
             var encryptedUserId = Context.GetHttpContext()?.Request?.Query["encryptedUserId"].ToString();
 
-            if(string.IsNullOrEmpty(encryptedUserId))
+            if (string.IsNullOrEmpty(encryptedUserId))
             {
-                 throw new InvalidOperationException("EncryptedUserId not found on request");
+                throw new InvalidOperationException("EncryptedUserId not found on request");
             }
 
             _hubService.AddConnection(Context.ConnectionId.ToString(), encryptedUserId);

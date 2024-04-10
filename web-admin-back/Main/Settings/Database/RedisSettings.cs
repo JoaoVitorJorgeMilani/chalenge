@@ -7,7 +7,7 @@ namespace Main.Settings.Database
 
         public string GetConnectionString()
         {
-            if(string.IsNullOrEmpty(this.ConnectionString))
+            if (string.IsNullOrEmpty(this.ConnectionString))
             {
                 throw new InvalidOperationException("Connection string not found");
             }
