@@ -7,9 +7,23 @@ import { Component } from '@angular/core';
 
 })
 export class OrderComponent {
-  activeTab: string = 'add';
+  activeTab: string = 'list';
+  orderDetails: any = null;
 
-  activateTab(tab: string){
+  activateTab(tab: string) {
+    if (tab === 'detail' && !this.orderDetails) {
+      return;
+    }
+
     this.activeTab = tab;
   }
+
+  get showDetail(): boolean { return this.activeTab === 'detail' && this.orderDetails; };
+
+  onOrderDetails(order: any) {
+    this.orderDetails = order;
+    this.activateTab('detail');
+  }
+
+
 }

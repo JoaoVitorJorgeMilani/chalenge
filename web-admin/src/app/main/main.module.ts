@@ -1,27 +1,30 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CatalogComponent } from './admin/catalog/catalog.component';
-import { AdminComponent } from './admin/admin.component';
-import { MainComponent } from './main.component';
-import { SharedModule } from '../shared/shared.module';
-import { AppRoutingModule } from '../app-routing.module';
-import { BrowserModule } from '@angular/platform-browser';
-import { CatalogAddComponent } from './admin/catalog/catalog-add/catalog-add.component';
-import { CatalogListComponent } from './admin/catalog/catalog-list/catalog-list.component';
+import { HttpClientModule } from '@angular/common/http';
+import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { BrowserModule } from '@angular/platform-browser';
+import { AppRoutingModule } from '../app-routing.module';
+import { SharedModule } from '../shared/shared.module';
+import { AdminComponent } from './admin/admin.component';
+import { CatalogAddComponent } from './admin/catalog/catalog-add/catalog-add.component';
 import { CatalogEditComponent } from './admin/catalog/catalog-edit/catalog-edit.component';
-import { OrderComponent } from './admin/order/order.component';
+import { CatalogListComponent } from './admin/catalog/catalog-list/catalog-list.component';
+import { CatalogComponent } from './admin/catalog/catalog.component';
 import { OrderAddComponent } from './admin/order/order-add/order-add.component';
+import { OrderDetailComponent } from './admin/order/order-detail/order-detail.component';
 import { OrderListComponent } from './admin/order/order-list/order-list.component';
-import { UserComponent } from './user/user.component';
-import { SseComponent } from './user/sse/sse.component';
-import { SignupComponent } from './user/signup/signup.component';
-import { UsersManagementComponent } from './admin/users-management/users-management.component';
+import { OrderComponent } from './admin/order/order.component';
 import { UsersManagementAddComponent } from './admin/users-management/users-management-add/users-management-add.component';
 import { UsersManagementListComponent } from './admin/users-management/users-management-list/users-management-list.component';
+import { UsersManagementComponent } from './admin/users-management/users-management.component';
+import { MainComponent } from './main.component';
+import { DeliveryWorkspaceOrdersComponent } from './user/delivery-workspace/delivery-workspace-orders/delivery-workspace-orders.component';
+import { DeliveryWorkspaceRunningComponent } from './user/delivery-workspace/delivery-workspace-running/delivery-workspace-running.component';
+import { DeliveryWorkspaceComponent } from './user/delivery-workspace/delivery-workspace.component';
 import { SignInComponent } from './user/signin/signin.component';
-import { SignedComponent } from './user/signed/signed.component';
+import { SignupComponent } from './user/signup/signup.component';
+import { SignalRService } from './user/stream/signalr.service';
+import { UserComponent } from './user/user.component';
 
 @NgModule({
   declarations: [
@@ -36,14 +39,15 @@ import { SignedComponent } from './user/signed/signed.component';
     OrderListComponent,
     OrderComponent,
     UserComponent,
-    SseComponent,
     SignupComponent,
     UsersManagementComponent,
     UsersManagementAddComponent,
     UsersManagementListComponent,
     SignInComponent,
-    SignedComponent
-    
+    DeliveryWorkspaceComponent,
+    DeliveryWorkspaceOrdersComponent,
+    DeliveryWorkspaceRunningComponent,
+    OrderDetailComponent
   ],
   imports: [
     HttpClientModule,
@@ -53,7 +57,10 @@ import { SignedComponent } from './user/signed/signed.component';
     SharedModule,
     FormsModule,
     ReactiveFormsModule,
+  ],
+  providers: [
+    SignalRService
   ]
-  
+
 })
 export class MainModule { }

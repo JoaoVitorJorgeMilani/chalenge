@@ -5,25 +5,25 @@ import { Component } from '@angular/core';
   templateUrl: './admin.component.html',
 })
 export class AdminComponent {
-  constructor() {}
+  constructor() { }
 
   sidebarOptions = [
     {
-      name: 'Bike Catalog', 
-      route: 'catalog', 
+      name: 'Bike Catalog',
+      route: 'catalog',
       icon: 'fa fa-motorcycle'
-    }, 
+    },
     {
-      name: 'Orders', 
-      route: 'order' ,
+      name: 'Orders',
+      route: 'order',
       icon: 'fa fa-truck'
     },
     {
-      name: 'Users Management', 
-      route: 'users_management' ,
+      name: 'Users Management',
+      route: 'users_management',
       icon: 'fa fa-users'
     }
-    
+
 
   ];
 }

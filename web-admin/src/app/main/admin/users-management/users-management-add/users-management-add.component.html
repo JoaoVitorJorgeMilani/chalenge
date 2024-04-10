@@ -1,41 +1,31 @@
 <app-grid customStyles="padding: 20px">
-           
-    <div class="alert alert-danger" role="alert" *ngIf="showError">
-        <ul>
-            <li *ngFor="let erro of errorMessages">{{ erro }}</li>
-        </ul>
-        
-    </div>
-    <div class="alert alert-success" role="alert" *ngIf="showSuccess">
-        <ul>
-            <li>Salvo com sucesso!</li>
-        </ul>
-        
-    </div>
-
+    <app-alert></app-alert>
     <form (ngSubmit)="onSubmit()">
         <app-row>
             <app-col col_span="6" customClasses="text-center">
-                <app-input labelText="Nome" type="text" id="name" name="name" placeholder="Nome" [(ngModel)]="user.name"/>                 
+                <app-input labelText="Nome" type="text" id="name" name="name" placeholder="Nome"
+                    [(ngModel)]="user.name" />
             </app-col>
             <app-col col_span="6" customClasses="text-center">
-                <app-input labelText="Cnpj" type="text" id="cnpj" name="cnpj" placeholder="Cnpj" [(ngModel)]="user.cnpj"/>                 
+                <app-input labelText="Cnpj" type="text" id="cnpj" name="cnpj" placeholder="Cnpj"
+                    [(ngModel)]="user.cnpj" />
             </app-col>
         </app-row>
         <app-row>
             <app-col col_span="6" customClasses="text-center">
-                <app-input labelText="CNH" type="text" id="cnh" name="cnh" placeholder="CNH" [(ngModel)]="user.cnh"/>
+                <app-input labelText="CNH" type="text" id="cnh" name="cnh" placeholder="CNH" [(ngModel)]="user.cnh" />
             </app-col>
             <app-col col_span="6" customClasses="text-center">
-                <app-datepicker labelText="Data de Nascimento" id="birthday" name="birthday" [(ngModel)]="user.birthday" />
+                <app-datepicker labelText="Data de Nascimento" id="birthday" name="birthday"
+                    [(ngModel)]="user.birthday" />
             </app-col>
         </app-row>
-        
+
         <app-row customClasses="justify-content-center" customStyles="padding-top: 10px;">
             <app-col col_span="4" customClasses="text-center">
                 <button type="submit" class="btn btn-primary">Submit</button>
             </app-col>
-        </app-row>        
+        </app-row>
     </form>
-    
+
 </app-grid>

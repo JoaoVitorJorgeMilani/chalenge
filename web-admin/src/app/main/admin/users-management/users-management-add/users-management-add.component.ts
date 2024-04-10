@@ -1,18 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
+import { AlertComponent } from 'src/app/shared/alert/alert.component';
 import { UsersManagementService } from '../users-management.service';
 
 @Component({
   selector: 'app-users-management-add',
-  templateUrl: './users-management-add.component.html',
-  styleUrls: ['./users-management-add.component.css']
+  templateUrl: './users-management-add.component.html'
 })
 export class UsersManagementAddComponent {
   
-  errorMessages: string[] = [];
-  
-  get showError() : boolean { return this.errorMessages.length > 0 };
-  showSuccess : boolean = false;
-  
+  @ViewChild(AlertComponent) alert!: AlertComponent;
+
   user = {
     name: '',
     cnpj: '',
@@ -23,15 +20,16 @@ export class UsersManagementAddComponent {
   constructor(private service: UsersManagementService){}
 
   onSubmit(){
+    this.alert.clear();
     if(this.validate()){
       this.service.add(this.user).subscribe(
         {
-          next: data => {
-            this.errorMessages = [];
-            this.showSuccess = true;
+          next: () => {
+            this.alert.clear();
+            this.alert.addSuccessMessage('Salvo com sucesso!');
           },
           error: error => {
-            this.errorMessages.push(error.error);
+            this.alert.addErrorMessage(error.error);
           }
         }
       );
@@ -39,23 +37,28 @@ export class UsersManagementAddComponent {
   }
 
   validate() : boolean {
-    this.errorMessages = [];
+    var valid = true;
     
-    if(!this.user.name || this.user.name.length < 10) {
-      this.errorMessages.push('O nome é obrigatório');
+    if(!this.user.name || this.user.name.length <= 0) {
+      this.alert.addErrorMessage('O nome é obrigatório');
+      valid = false;
     }
 
     if(!this.user.cnpj || this.user.cnpj.length < 4) {
-      this.errorMessages.push('O cnpj é obrigatório');
+      this.alert.addErrorMessage('O cnpj é obrigatório');
+      valid = false;
     }
 
     if(!this.user.cnh || this.user.cnh.length < 5) {
-      this.errorMessages.push('O número da cng é obrigatório');
+      this.alert.addErrorMessage('O número da cng é obrigatório');
+      valid = false;
     }
 
     if(!this.user.birthday) {
-      this.errorMessages.push('A data de nascimento é obrigatória');
+      this.alert.addErrorMessage('A data de nascimento é obrigatória');
+      valid = false;
     }
-    return this.errorMessages.length == 0;
+
+    return valid;
   }
 }

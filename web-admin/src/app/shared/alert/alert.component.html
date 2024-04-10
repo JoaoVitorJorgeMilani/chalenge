@@ -1,0 +1,10 @@
+<div class="alert alert-danger" role="alert" *ngIf="showError">
+    <ul>
+        <li *ngFor="let erro of errorMessages">{{ erro }}</li>
+    </ul>    
+</div>
+<div class="alert alert-success" role="alert" *ngIf="showSuccess">
+    <ul>
+        <li *ngFor="let message of successMessages">{{ message }}</li>
+    </ul>    
+</div>

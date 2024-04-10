@@ -1,29 +1,20 @@
 <app-grid customStyles="padding: 20px">
-    
-    <div class="alert alert-danger" role="alert" *ngIf="showError">
-        <ul>
-            <li *ngFor="let erro of errorMessages">{{ erro }}</li>
-        </ul>
-    </div>
-    <div class="alert alert-success" role="alert" *ngIf="showSuccess">
-        <ul>
-            <li>Salvo com sucesso!</li>
-        </ul>        
-    </div>
-
+    <app-alert></app-alert>
     <form (ngSubmit)="onSubmit()">
         <app-row>
             <app-col col_span="6" customClasses="text-center">
-                <app-input labelText="Identificador" type="text" id="identifier" name="identifier" placeholder="Identificador" [(ngModel)]="order.identifier"/>
+                <app-input labelText="Identificador" type="text" id="identifier" name="identifier"
+                    placeholder="Identificador" [(ngModel)]="order.identifier" />
             </app-col>
             <app-col col_span="6" customClasses="text-center">
-                <app-currency labelText="Valor" id="fare" name="fare" placeholder="Valor" [(ngModel)]="order.fare" ></app-currency>
+                <app-currency labelText="Valor" id="fare" name="fare" placeholder="Valor"
+                    [(ngModel)]="order.fare"></app-currency>
             </app-col>
         </app-row>
         <app-row customClasses="justify-content-center" customStyles="padding-top: 10px;">
             <app-col col_span="4" customClasses="text-center">
                 <button type="submit" class="btn btn-primary">Submit</button>
             </app-col>
-        </app-row>        
-    </form>    
+        </app-row>
+    </form>
 </app-grid>

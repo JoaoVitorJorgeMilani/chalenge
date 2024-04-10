@@ -2,20 +2,21 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'environments/environment';
 import { Observable, catchError, map, of } from 'rxjs';
-import { SseService } from 'src/app/main/user/sse/sse.service';
+import { SignalRService } from 'src/app/main/user/stream/signalr.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
+  loggedUser: any;
   isLoggedIn = false;
   baseUrl = environment.apiUrl;
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   }
 
-  constructor(private httpClient: HttpClient, private sseService: SseService) { }
+  constructor(private httpClient: HttpClient, private signalRService: SignalRService) { }
 
   isAuthenticated(): boolean {
     return this.isLoggedIn;
@@ -27,11 +28,9 @@ export class AuthService {
     return this.httpClient.get<string>(`${this.baseUrl}/user/login`, { params: { userName: user.name } })
       .pipe(
         map((userDto) => {
-          console.log("DEBUGGING USER LOGGED");
-          console.log(userDto);
-
-          this.registerUserSSE(userDto);
+          this.registerUserSignalR(userDto);
           this.isLoggedIn = true;
+          this.loggedUser = userDto;
           return true;          
         }),
         catchError(error => {
@@ -41,23 +40,11 @@ export class AuthService {
       );
   }
 
-  registerUserSSE(user: any) {
-    console.log("registering user SSE");
-    this.sseService.connectToHub(user.encryptedId);
-
-    // this.sseService.connectToSse(user.encryptedId).subscribe({
-    //   next : data => {
-    //     console.log("CONECTED");
-    //     console.log(data);
-
-    //   },
-    //   error: error => {
-    //     console.log("CONECTED ERROR");
-    //     console.error('Error in SSE connection:', error);
-    //   }
-    // });
+  registerUserSignalR(user: any) {
+    this.signalRService.connectToHub(user.encryptedId);
   }
 
-
-
+  getLogedUser(){
+    return this.loggedUser;
+  }
 }

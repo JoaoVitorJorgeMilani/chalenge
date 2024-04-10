@@ -1,0 +1,32 @@
+<app-modal #modalOrderNotification modalType="confirmation" (onAccept)="orderNotificationAccept()"
+  (onDecline)="orderNotificationDecline()"></app-modal>
+<div class="card">
+  <h5 class="card-header">Bike Catalog</h5>
+  <div class="card-body">
+    <app-alert #alert></app-alert>
+    <app-grid customClasses="justify-content-md-center">
+      <app-row>
+        <app-col col_span="12">
+          <ul class="nav nav-tabs">
+            <li class="nav-item">
+              <a class="nav-link" [class.active]="activeTab === 'orders'" (click)="activateTab('orders')">Pedidos
+                disponíveis</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" [class.active]="activeTab === 'running'" [class.disabled]="!isDelivering()"
+                (click)="activateTab('running')">Entregando</a>
+            </li>
+          </ul>
+        </app-col>
+      </app-row>
+      <app-row>
+        <app-col col_span="12">
+          <app-delivery-workspace-orders *ngIf="activeTab === 'orders'"
+            (onDeliveryAccepted)="onDeliveryAccepted($event)"> </app-delivery-workspace-orders>
+          <app-delivery-workspace-running *ngIf="activeTab === 'running'" [deliveringOrder]="this.deliveringOrder"
+            (onDeliveryDeclined)="onDeliveryDeclined()"></app-delivery-workspace-running>
+        </app-col>
+      </app-row>
+    </app-grid>
+  </div>
+</div>
