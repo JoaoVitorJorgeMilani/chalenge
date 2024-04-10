@@ -1,4 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
+import { AlertComponent } from 'src/app/shared/alert/alert.component';
 import { CatalogService } from '../catalog.service';
 
 @Component({
@@ -6,13 +7,11 @@ import { CatalogService } from '../catalog.service';
   templateUrl: './catalog-add.component.html'
 })
 export class CatalogAddComponent {
-  
-  constructor(private service : CatalogService){}
-  errorMessages: string[] = [];
-  
-  get showError() : boolean { return this.errorMessages.length > 0 };
-  showSuccess : boolean = false;
-  
+
+  @ViewChild(AlertComponent) alert!: AlertComponent;
+
+  constructor(private service: CatalogService) { }
+
   bike = {
     identifier: '',
     manufacturingYear: '',
@@ -20,40 +19,49 @@ export class CatalogAddComponent {
     licensePlate: '',
   }
 
-  onSubmit(){
-    if(this.validate()){
+  onSubmit() {
+    this.alert.clear();
+    if (this.validate()) {
       this.service.add(this.bike).subscribe(
         {
           next: data => {
-            this.errorMessages = [];
-            this.showSuccess = true;
+            this.alert.clear();
+            this.alert.addSuccessMessage('Salvo com sucesso!');
           },
           error: error => {
-            this.errorMessages.push(error.error);
+            this.alert.clear();
+            this.alert.addErrorMessage(error.error);
           }
         }
       );
-    }   
+    }
   }
 
-  validate() : boolean {
-    this.errorMessages = [];
-    
-    if(!this.bike.identifier || this.bike.identifier.length < 10) {
-      this.errorMessages.push('O identificador é obrigatório');
+  validate(): boolean {
+
+    var valid = true;
+    this.alert.clear();
+
+    if (!this.bike.identifier || this.bike.identifier.length <= 0) {
+      this.alert.addErrorMessage('O identificador é obrigatório');
+      valid = false;
     }
 
-    if(!this.bike.manufacturingYear || this.bike.manufacturingYear.length < 4) {
-      this.errorMessages.push('O ano de fabricação é obrigatório');
+    if (!this.bike.manufacturingYear || this.bike.manufacturingYear.length < 4) {
+      this.alert.addErrorMessage('O ano de fabricação é obrigatório');
+      valid = false;
     }
 
-    if(!this.bike.bikeModel || this.bike.bikeModel.length < 5) {
-      this.errorMessages.push('O modelo é obrigatório');
+    if (!this.bike.bikeModel || this.bike.bikeModel.length < 5) {
+      this.alert.addErrorMessage('O modelo é obrigatório');
+      valid = false;
     }
 
-    if(!this.bike.licensePlate || this.bike.licensePlate.length < 7) {
-      this.errorMessages.push('O número da placa é obrigatório');
+    if (!this.bike.licensePlate || this.bike.licensePlate.length < 7) {
+      this.alert.addErrorMessage('O número da placa é obrigatório');
+      valid = false;
     }
-    return this.errorMessages.length == 0;
+
+    return valid;
   }
 }

@@ -7,10 +7,7 @@ import { Component, Input } from '@angular/core';
       <ng-content></ng-content>
     </div> 
   `,
-  styleUrls: ['./app-col.component.css']
-
-
-  
+  styleUrls: ['./app-col.component.css'] 
 })
 export class ColComponent {
   @Input() col_span : string = '';

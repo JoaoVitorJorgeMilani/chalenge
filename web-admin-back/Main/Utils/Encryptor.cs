@@ -21,12 +21,15 @@ namespace Main.Utils
                 throw new ArgumentNullException("IV");
         }
 
-        public string Encrypt(ObjectId id)
+        public string Encrypt(ObjectId? id)
         {
-            return this.Encrypt(id.ToString());
+            if (id == null)
+                return string.Empty;
+
+            return Encrypt(id.ToString());
         }
 
-        public string Encrypt(string str)
+        public string Encrypt(string? str)
         {
             if (str == null || str.Length <= 0)
                 throw new ArgumentNullException("plainText");
@@ -52,9 +55,14 @@ namespace Main.Utils
         }
 
 
-        public ObjectId DecryptObjectId(string str)
+        public ObjectId DecryptObjectId(string encryptStr)
         {
-            return ObjectId.Parse(this.Decrypt(str));
+            string str = Decrypt(encryptStr);
+
+            if (string.IsNullOrEmpty(str))
+                return ObjectId.Empty;
+
+            return ObjectId.TryParse(str, out var id) ? id : ObjectId.Empty;
         }
 
         public string Decrypt(string encryptedStr)
@@ -62,7 +70,9 @@ namespace Main.Utils
             byte[] cipherBytes = Convert.FromBase64String(encryptedStr);
 
             if (cipherBytes == null || cipherBytes.Length <= 0)
+            {
                 throw new ArgumentNullException("encryptedStr");
+            }
 
             validateEnvironment();
 
@@ -76,11 +86,17 @@ namespace Main.Utils
                 {
                     using (StreamReader srDecrypt = new StreamReader(csDecrypt))
                     {
-                        plaintext = srDecrypt.ReadToEnd();
+                        try
+                        {
+                            plaintext = srDecrypt.ReadToEnd();
+                        }
+                        catch (Exception)
+                        {
+                            plaintext = string.Empty;
+                        }
                     }
                 }
             }
-
             return plaintext;
         }
     }

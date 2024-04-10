@@ -1,35 +1,35 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { AlertComponent } from 'src/app/shared/alert/alert.component';
 import { UsersManagementService } from '../users-management.service';
 
 @Component({
   selector: 'app-users-management-list',
-  templateUrl: './users-management-list.component.html',
-  styleUrls: ['./users-management-list.component.css']
+  templateUrl: './users-management-list.component.html'
 })
-export class UsersManagementListComponent {
-  data: any[] = [];
-  errorMessages: string[] = [];
+export class UsersManagementListComponent implements AfterViewInit {
   
-  get showError() : boolean { return this.errorMessages.length > 0 };
-  showSuccess : boolean = false;
-  sucessMessage: string = "";
+  @ViewChild(AlertComponent) alert!: AlertComponent;
+
+  data: any[] = [];
   isEditing: boolean = false;
 
   constructor(private router: Router, private service : UsersManagementService){}
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
     this.loadRefreshList();
   }
 
   loadRefreshList(){
+    this.alert.clear();
     this.service.getList().subscribe(
       { 
-        next: data => {
+        next: (data) => {
           this.data = data;
         },
-        error: error => {
-          console.log(error);
+        error: () => {
+          this.alert.clear();
+          this.alert.addErrorMessage("Erro ao carregar os dados, contate o administrador");
         }
       }
     );

@@ -4,17 +4,13 @@
         <p class="card-text">
             Insira seu nome de usuário para logar na plataforma
         </p>
-        <div class="alert alert-danger" role="alert" *ngIf="showError">
-            <ul>
-                <li *ngFor="let erro of errorMessages">{{ erro }}</li>
-            </ul>
-            
-        </div>
+        <app-alert></app-alert>
         <app-grid customStyles="padding: 20px">
             <form (ngSubmit)="onSubmit()">
                 <app-row>
                     <app-col col_span="12">
-                        <app-input labelText="Nome" type="text" id="login" name="login" placeholder="Nome" [(ngModel)]="user.name" />
+                        <app-input labelText="Nome" type="text" id="login" name="login" placeholder="Nome"
+                            [(ngModel)]="user.name" />
                     </app-col>
                 </app-row>
                 <app-row customClasses="justify-content-center" customStyles="padding-top: 10px;">

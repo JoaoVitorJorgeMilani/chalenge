@@ -1,5 +1,5 @@
 
-using System.ComponentModel.DataAnnotations;
+using FluentValidation;
 using Main.Settings.Database;
 using Main.Utils;
 using MongoDB.Bson;
@@ -9,88 +9,75 @@ namespace Main.App.Domain.User
 {
     public class UserRepository : BaseMongoRepository<UserEntity>, IUserRepository
     {
-        private readonly IEncryptor encryptor;
+        private readonly IEncryptor _encryptor;
+        private readonly ILogger<UserRepository> _logger;
 
-        public UserRepository(IMongoDatabase mongoDatabase, IEncryptor encryptor) : base(mongoDatabase, "User")
+
+        public UserRepository(IMongoDatabase mongoDatabase, IEncryptor encryptor, IValidator<UserEntity> validatorEntity,
+            ILogger<UserRepository> logger) : base(mongoDatabase, "User")
         {
-            this.encryptor = encryptor;
+            _encryptor = encryptor;
+            _logger = logger;
         }
-        
+
         public bool Add(UserEntity user)
         {
-             try
-            {
-                base.InsertOne(user);
-                return true;
-            }
-            catch (MongoWriteException)
-            {
-                return false;
-            }
+            base.InsertOne(user);
+            return true;
         }
 
-        public List<UserDto> Get(UserFilterModel filter)
-        {   
-            var users = base.Find(filter.GetFilterDefinition()).ToList();        
-            List<UserDto> userResp = new List<UserDto>();
-            users.ForEach(user => userResp.Add(UserDto.Of(user, encryptor)));
-
-            return userResp;
+        public List<UserEntity> Get(UserFilterModel filter)
+        {
+            var users = base.Find(filter.GetFilterDefinition()).ToList();
+            return users;
         }
 
-        public UserDto GetUserByName(string userName)
-        {            
+        public UserEntity GetUserByName(string userName)
+        {
             var user = base.FindFirstOrDefault(Builders<UserEntity>.Filter.Eq(user => user.Name, userName));
 
-            if(user == null)
+            if (user == null)
             {
                 throw new ValidationException("User not found");
             }
 
-            return UserDto.Of(user, encryptor);
+            return user;
         }
 
-        public UserDto GetUserById(string encryptedId)
-        {            
-            
-            ObjectId userId = encryptor.DecryptObjectId(encryptedId!);
+        public UserEntity GetUserById(string encryptedId)
+        {
+
+            ObjectId userId = _encryptor.DecryptObjectId(encryptedId!);
 
             var user = base.FindFirstOrDefault(Builders<UserEntity>.Filter.Eq(user => user.Id, userId));
 
-            if(user == null)
+            if (user == null)
             {
                 throw new ValidationException("User not found");
             }
 
-            return UserDto.Of(user, encryptor);
+            return user;
         }
 
-        public UserDto Update(UserDto user)
+        public UserEntity Update(UserEntity user)
         {
-            if(!user.Validate())
-            {
-                throw new ValidationException("Invalid User");
-            }
+            var filter = Builders<UserEntity>.Filter.Eq(x => x.Id, user.Id);
 
-            ObjectId userId = encryptor.DecryptObjectId(user.encryptedId!);
-            
-            var filter = Builders<UserEntity>.Filter.Eq(x => x.Id, userId);
-
-            var update = Builders<UserEntity>.Update.Set(user => user.Name, user.name)
-                .Set(user => user.Cnpj, user.cnpj)
-                .Set(user => user.Cnh, user.cnh)
-                .Set(user => user.Birthday, user.birthday)
-                .Set(user => user.HasRentedBike, user.hasRentedBike)
-                .Set(user => user.Status, user.status);
-
+            var update = Builders<UserEntity>.Update.Set(user => user.Name, user.Name)
+                .Set(user => user.Cnpj, user.Cnpj)
+                .Set(user => user.Cnh, user.Cnh)
+                .Set(user => user.Birthday, user.Birthday)
+                .Set(user => user.HasRentedBike, user.HasRentedBike)
+                .Set(user => user.Status, user.Status);
 
             UserEntity userUpdated = base.FindOneAndUpdate(filter, update, new FindOneAndUpdateOptions<UserEntity> { ReturnDocument = ReturnDocument.After });
 
-            if(userUpdated == null)
+            if (userUpdated == null)
             {
                 throw new ValidationException("User not found");
             }
-            return UserDto.Of(userUpdated, encryptor);
+
+            return userUpdated;
 
         }
 
@@ -98,6 +85,47 @@ namespace Main.App.Domain.User
         {
             var filter = Builders<UserEntity>.Filter.In(user => user.Id, userIds);
             return base.Find(filter).ToList();
+        }
+
+        public UserEntity GetUserByCnhOrCnpj(string cnh, string cnpj)
+        {
+            var filter = Builders<UserEntity>.Filter.Or(
+                Builders<UserEntity>.Filter.Eq(user => user.Cnh, cnh),
+                Builders<UserEntity>.Filter.Eq(user => user.Cnpj, cnpj)
+            );
+            return base.FindFirstOrDefault(filter);
+        }
+
+        public Task<UserEntity> GetUserById(ObjectId userId)
+        {
+            var filter = Builders<UserEntity>.Filter
+                .Eq(user => user.Id, userId);
+
+            return base.FindFirstAsync(filter);
+        }
+
+        public Task<UserEntity> UpdateUserOnPickUp(UserEntity user)
+        {
+            var filter = Builders<UserEntity>.Filter.Eq(_user => _user.Id, user.Id);
+
+            var update = Builders<UserEntity>.Update
+                .Set(_user => _user.Status, user.Status)
+                .Set(_user => _user.Deliveries, user.Deliveries)
+                .Set(_user => _user.DeliveringOrder, user.DeliveringOrder);
+
+            return base.UpdateOneAndGetAsync(filter, update);
+        }
+
+        public Task<UpdateResult> UpdateUserOnDecline(UserEntity user)
+        {
+            var filter = Builders<UserEntity>.Filter.Eq(_user => _user.Id, user.Id);
+
+            var update = Builders<UserEntity>.Update
+                .Set(_user => _user.Status, user.Status)
+                .Set(_user => _user.DeliveringOrder, user.DeliveringOrder)
+                .Set(_user => _user.Deliveries, user.Deliveries);
+
+            return base.UpdateOneAsync(filter, update);
         }
     }
 }

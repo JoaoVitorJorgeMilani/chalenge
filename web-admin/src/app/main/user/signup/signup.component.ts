@@ -1,19 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
+import { AlertComponent } from 'src/app/shared/alert/alert.component';
 import { SignupService } from './signup.service';
 
 @Component({
   selector: 'app-signup',
-  templateUrl: './signup.component.html',
-  styleUrls: ['./signup.component.css']
+  templateUrl: './signup.component.html'
 })
 export class SignupComponent {
-  activeTab: string = 'list';
 
-  errorMessages: string[] = [];
-  
-  get showError() : boolean { return this.errorMessages.length > 0 };
-  showSuccess : boolean = false;
-  
+  @ViewChild(AlertComponent) alert!: AlertComponent
+
+  activeTab: string = 'list';
   user = {
     name: '',
     cnpj: '',
@@ -21,42 +18,48 @@ export class SignupComponent {
     birthday: '',
   }
 
-  constructor(private service: SignupService){}
+  constructor(private service: SignupService) { }
 
-  onSubmit(){
-    if(this.validate()){
+  onSubmit() {
+    if (this.validate()) {
+      this.alert.clear();
       this.service.add(this.user).subscribe(
         {
-          next: data => {
-            this.errorMessages = [];
-            this.showSuccess = true;
+          next: () => {
+            this.alert.addSuccessMessage('Salvo com sucesso!');
           },
-          error: error => {
-            this.errorMessages.push(error.error);
+          error: (error) => {
+            this.alert.addErrorMessage(error.error);
           }
         }
       );
-    }   
+    }
   }
 
-  validate() : boolean {
-    this.errorMessages = [];
-    
-    if(!this.user.name || this.user.name.length < 10) {
-      this.errorMessages.push('O nome é obrigatório');
+  validate(): boolean {
+    var valid = true;
+    this.alert.clear();
+
+    if (!this.user.name || this.user.name.length < 10) {
+      this.alert.addErrorMessage('O nome é obrigatório');
+      valid = false;
     }
 
-    if(!this.user.cnpj || this.user.cnpj.length < 4) {
-      this.errorMessages.push('O cnpj é obrigatório');
+    if (!this.user.cnpj || this.user.cnpj.length < 4) {
+      this.alert.addErrorMessage('O cnpj é obrigatório');
+      valid = false;
     }
 
-    if(!this.user.cnh || this.user.cnh.length < 5) {
-      this.errorMessages.push('O número da cng é obrigatório');
+    if (!this.user.cnh || this.user.cnh.length < 5) {
+      this.alert.addErrorMessage('O número da cng é obrigatório');
+      valid = false;
     }
 
-    if(!this.user.birthday) {
-      this.errorMessages.push('A data de nascimento é obrigatória');
+    if (!this.user.birthday) {
+      this.alert.addErrorMessage('A data de nascimento é obrigatória');
+      valid = false;
     }
-    return this.errorMessages.length == 0;
+
+    return valid;
   }
 }

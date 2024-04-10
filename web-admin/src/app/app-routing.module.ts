@@ -8,8 +8,8 @@ import { UserComponent } from './main/user/user.component';
 import { SignupComponent } from './main/user/signup/signup.component';
 import { UsersManagementComponent } from './main/admin/users-management/users-management.component';
 import { SignInComponent } from './main/user/signin/signin.component';
-import { SignedComponent } from './main/user/signed/signed.component';
 import { AuthGuard } from './shared/auth/authguard';
+import { DeliveryWorkspaceComponent } from './main/user/delivery-workspace/delivery-workspace.component';
 
 
 const routes: Routes = [
@@ -48,8 +48,8 @@ const routes: Routes = [
               component: SignInComponent
             },
             {
-              path: 'user_signed',
-              component: SignedComponent,
+              path: 'delivery_workspace',
+              component: DeliveryWorkspaceComponent,
               canActivate: [AuthGuard] 
             }
           ]  

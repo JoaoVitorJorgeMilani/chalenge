@@ -1,18 +1,15 @@
-import { Component } from '@angular/core';
-import { AuthService } from 'src/app/shared/auth/auth.service';
+import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { AlertComponent } from 'src/app/shared/alert/alert.component';
+import { AuthService } from 'src/app/shared/auth/auth.service';
 
 @Component({
   selector: 'app-signin',
-  templateUrl: './signin.component.html',
-  styleUrls: ['./signin.component.css']
+  templateUrl: './signin.component.html'
 })
 export class SignInComponent {
 
-  errorMessages: string[] = [];
-  
-  get showError() : boolean { return this.errorMessages.length > 0 };
-  showSuccess : boolean = false;
+  @ViewChild(AlertComponent) alert!: AlertComponent;
   
   user = {
     name: '',
@@ -25,16 +22,15 @@ export class SignInComponent {
 
 
   onSubmit() {
+    this.alert.clear();
     this.service.login(this.user).subscribe({
       next: () => {
-        this.errorMessages = [];
         this.router.navigateByUrl(
-          this.router.url.replace('users_signin', 'user_signed')
+          this.router.url.replace('users_signin', 'delivery_workspace')
         );
       },
-      error: (error) => {
-        this.errorMessages = [];
-        this.errorMessages.push('Falha durante a autenticação, tente inserir o nome de um usuario válido');
+      error: () => {
+        this.alert.addErrorMessage('Falha durante a autenticação, tente inserir o nome de um usuario válido');
       }
     });
   }

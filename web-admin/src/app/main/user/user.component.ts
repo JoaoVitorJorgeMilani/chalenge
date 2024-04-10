@@ -10,18 +10,18 @@ export class UserComponent {
 
   sidebarOptions = [
     {
-      name: 'SignUp', 
-      route: 'users_signup' ,
+      name: 'SignUp',
+      route: 'users_signup',
       icon: 'fa fa-pencil-square-o'
     },
     {
-      name: 'SignIn', 
-      route: 'users_signin' ,
+      name: 'SignIn',
+      route: 'users_signin',
       icon: 'fa fa-rocket'
     }
   ];
 
   ngOnInit(): void {
-    
+
   }
 }

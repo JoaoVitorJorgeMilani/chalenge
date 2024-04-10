@@ -1,31 +1,29 @@
-import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { AlertComponent } from 'src/app/shared/alert/alert.component';
 import { CatalogService } from '../catalog.service';
 
 @Component({
   selector: 'app-catalog-list',
   templateUrl: './catalog-list.component.html'
 })
-export class CatalogListComponent implements OnInit {
+export class CatalogListComponent implements AfterViewInit {
+
+  @ViewChild('alert') alert!: AlertComponent;
   
+  isEditing : boolean = false;
+  bikeEdit : any = {};
   data: any[] = [];
 
   constructor(private router: Router, private service : CatalogService){}
-  
-  errorMessages: string[] = [];
-  
-  get showError() : boolean { return this.errorMessages.length > 0 };
-  showSuccess : boolean = false;
-  sucessMessage: string = "";
-  isEditing: boolean = false;
-  bikeEdit : any = {};
 
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
     this.loadRefreshList();
   }
 
   loadRefreshList(){
+    this.alert.clear();
     this.service.getList().subscribe(
       { 
         next: data => {
@@ -43,16 +41,17 @@ export class CatalogListComponent implements OnInit {
   }
 
   deleteItem(item: any) {
+    this.alert.clear();
     this.service.delete(item).subscribe(
       {
         next: data => {
-          this.errorMessages = [];
-          this.showSuccess = true;
-          this.sucessMessage = "Item excluído com sucesso!";
+          this.alert.clear();
+          this.alert.addSuccessMessage("Item excluído com sucesso!");
           this.loadRefreshList();
         },
         error: error => {
-          this.errorMessages.push(error.error);
+          this.alert.clear();
+          this.alert.addErrorMessage(error.error);
           this.loadRefreshList();
         }
       }
@@ -62,27 +61,9 @@ export class CatalogListComponent implements OnInit {
   editItem(item: any) {
     this.bikeEdit = item;
     this.isEditing = true;
-
-    // this.service.delete(item).subscribe(
-    //   {
-    //     next: data => {
-    //       this.errorMessages = [];
-    //       this.showSuccess = true;
-    //       this.sucessMessage = "Item excluído com sucesso!";
-    //       this.loadRefreshList();
-    //     },
-    //     error: error => {
-    //       this.errorMessages.push(error.error);
-    //       this.loadRefreshList();
-    //     }
-    //   }
-    // );
-
   }
 
   onCloseEdit(){
     this.isEditing = false;
   }
-
-
 }

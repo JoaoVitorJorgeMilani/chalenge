@@ -5,12 +5,7 @@
             Atenção! Apenas a placa da moto pode ser alterada.
         </p>
         <app-grid customStyles="padding: 20px">
-            <div class="alert alert-danger" role="alert" *ngIf="showError">
-                <ul><li *ngFor="let erro of errorMessages">{{ erro }}</li></ul>
-            </div>
-            <div class="alert alert-success" role="alert" *ngIf="showSuccess">
-                <ul><li>Editado com sucesso!</li></ul>
-            </div>
+            <app-alert></app-alert>
             <form (ngSubmit)="onSubmit()">
                 <app-row>
                     <app-col col_span="6" customClasses="text-center">
@@ -39,7 +34,7 @@
                         <button type="button" class="btn btn-outline-danger " (click)="onBack()">Voltar</button>
                     </app-col>
                     <app-col col_span="4" customClasses="text-center">
-                        <button type="submit" class="btn btn-primary" >Submit</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
                     </app-col>
                 </app-row>
             </form>

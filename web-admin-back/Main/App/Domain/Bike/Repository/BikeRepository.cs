@@ -31,7 +31,7 @@ namespace Main.App.Domain.Bike
 
         public bool Delete(ObjectId id)
         {
-            return base.DeleteOne(Builders<Bike>.Filter.Eq(bike=>bike.Id, id)).IsAcknowledged;
+            return base.DeleteOne(Builders<Bike>.Filter.Eq(bike => bike.Id, id)).IsAcknowledged;
         }
 
         public void Update(Bike bike)
