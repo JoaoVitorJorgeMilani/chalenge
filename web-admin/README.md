@@ -49,7 +49,7 @@ sh run_local.sh
 
 After the project is loaded, you can access the page on the follow link
 
-[Click here to access the page](http://localhost:1401) 
+[Click here to access the page](http://localhost:4201) 
 
 ### Admin tab
 
