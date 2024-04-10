@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  web-admin:
+    build: 
+      context: ../web-admin
+      dockerfile: Dockerfile
+    ports:
+      - "4201:80"
+    depends_on:
+      - web-admin-back
+
+  web-admin-back:
+    build: 
+      context: ../web-admin-back
+      dockerfile: Dockerfile
+    ports:
+      - 5000:5000
+    depends_on:
+      - mongodb
+      - redis
+      - rabbitmq
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development  # Run in development mode for docker config
+
+  mongodb:
+    build: 
+      context: ./mongodb
+      dockerfile: Dockerfile
+    ports:
+      - 27017:27017
+
+  redis:
+    build: 
+      context: ./redis
+      dockerfile: Dockerfile
+    ports:
+      - 6379:6379
+
+  rabbitmq:
+    build: 
+      context: ./rabbitmq
+      dockerfile: Dockerfile
+    ports:
+      - 5672:5672
+      - 15672:15672
+      

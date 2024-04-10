@@ -1,0 +1,7 @@
+# front
+web-admin/node_modules
+web-admin/.angular
+
+# back
+web-admin-back/bin
+web-admin-back/obj
