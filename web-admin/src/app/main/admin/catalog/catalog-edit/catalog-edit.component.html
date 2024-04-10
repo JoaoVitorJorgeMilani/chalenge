@@ -1,0 +1,48 @@
+<div class="card">
+    <h6 class="card-header">Edit Bike</h6>
+    <div class="card-body">
+        <p class="card-text">
+            Atenção! Apenas a placa da moto pode ser alterada.
+        </p>
+        <app-grid customStyles="padding: 20px">
+            <div class="alert alert-danger" role="alert" *ngIf="showError">
+                <ul><li *ngFor="let erro of errorMessages">{{ erro }}</li></ul>
+            </div>
+            <div class="alert alert-success" role="alert" *ngIf="showSuccess">
+                <ul><li>Editado com sucesso!</li></ul>
+            </div>
+            <form (ngSubmit)="onSubmit()">
+                <app-row>
+                    <app-col col_span="6" customClasses="text-center">
+                        <app-input [disabled]="true" labelText="Identificador" type="text" id="identifier"
+                            name="identifier" placeholder="Identificador" [(ngModel)]="bikeEdit.identifier" />
+                    </app-col>
+                    <app-col col_span="6" customClasses="text-center">
+                        <app-input [disabled]="true" labelText="Ano fabricação" type="text" [maxLength]="4"
+                            id="manufacturingYear" name="manufacturingYear" placeholder="Ano Fabricação"
+                            [(ngModel)]="bikeEdit.manufacturingYear" />
+                    </app-col>
+                </app-row>
+                <app-row>
+                    <app-col col_span="6" customClasses="text-center">
+                        <app-input [disabled]="true" labelText="Marca / Modelo Moto" type="text" id="bikeModel"
+                            name="bikeModel" placeholder="Marca / Modelo" [(ngModel)]="bikeEdit.bikeModel" />
+                    </app-col>
+                    <app-col col_span="6" customClasses="text-center">
+                        <app-input labelText="Placa" type="text" [maxLength]="7" id="licensePlate" name="licensePlate"
+                            placeholder="Placa" [(ngModel)]="bikeEdit.licensePlate" />
+                    </app-col>
+                </app-row>
+
+                <app-row customClasses="justify-content-center" customStyles="padding-top: 10px;">
+                    <app-col col_span="4" customClasses="text-center">
+                        <button type="button" class="btn btn-outline-danger " (click)="onBack()">Voltar</button>
+                    </app-col>
+                    <app-col col_span="4" customClasses="text-center">
+                        <button type="submit" class="btn btn-primary" >Submit</button>
+                    </app-col>
+                </app-row>
+            </form>
+        </app-grid>
+    </div>
+</div>

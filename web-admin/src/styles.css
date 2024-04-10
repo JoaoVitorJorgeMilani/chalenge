@@ -1,0 +1,22 @@
+/* You can add global styles to this file, and also import other style files */
+@import '~bootstrap/dist/css/bootstrap.css';
+
+:root {
+    --mottu-color-primary: #6EC1E4;
+    --mottu-color-secondary: #54595F;
+    --mottu-color-text: #7A7A7A;
+    --mottu-color-accent: #61CE70;
+    --mottu-color-black: #1D1D1D;
+    --mottu-color-light-text: #FFFFFF;
+    --mottu-color-hover: #007910;
+    --mottu-color-hover-background: #061f09;
+
+    --mottu-color-22b3a2a: #F4F4F4;       
+    --mottu-color-8e04aaa: #4BCFAD;
+    --mottu-color-e991a73: #29D443;
+    --mottu-color-8d26fee: #040408;
+    --mottu-color-c210a88: #05AF31;
+    --mottu-color-9dd7c08: #A2FF00;
+    --mottu-color-f36357d: #05AF31;
+    
+  }
