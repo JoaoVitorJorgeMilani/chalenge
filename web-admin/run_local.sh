@@ -1,2 +1,1 @@
-npm install
 ng serve

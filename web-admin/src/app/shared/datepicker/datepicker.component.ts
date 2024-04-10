@@ -30,8 +30,6 @@ export class DatepickerComponent {
   private onChange!: (value: any) => void;
 
   onInput(event: any): void {
-    console.log("ON INPUT ");
-    console.log(event)
     this.onChange(event.target.value);
   }
 

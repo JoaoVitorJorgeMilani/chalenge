@@ -1,0 +1,94 @@
+<div *ngIf="order">
+    <app-alert #alert></app-alert>
+    <div class="card">
+        <h6 class="card-header">Detalhes do pedido: {{ order.identifier }}</h6>
+        <div class="card-body">
+            <app-alert #alert></app-alert>
+            <app-grid>
+                <app-row>
+                    <app-col col_span="6">
+                        <app-display-field labelText="Situação" [value]="order.formattedStatus"></app-display-field>
+                    </app-col>
+                    <app-col col_span="6">
+                        <app-display-field labelText="Valor" [value]="order.fare | customCurrency"></app-display-field>
+                    </app-col>
+                </app-row>
+                <app-row>
+                    <app-col col_span="6">
+                        <app-display-field labelText="Data cadastro"
+                            [value]="order.createDate | customDate"></app-display-field>
+                    </app-col>
+                    <app-col col_span="6">
+                        <app-display-field labelText="Última atualização"
+                            [value]="order.updateDate | customDate"></app-display-field>
+                    </app-col>
+                </app-row>
+
+                <app-row>
+                    <app-col col_span="12">
+                        <div class="accordion mt-4 " id="accordion">
+                            <div class="card">
+                                <div class="card-header" id="headingDeliveries">
+                                    <h5 class="mb-0">
+                                        <div class="btn-toolbar" style="cursor: pointer;" data-bs-toggle="collapse"
+                                            data-bs-target="#collapseDeliveries" aria-expanded="true"
+                                            aria-controls="collapseDeliveries">
+                                            <button class="btn btn-toolbar" type="button">
+                                                Tentativas de entrega
+                                            </button>
+                                        </div>
+                                    </h5>
+                                </div>
+                                <div id="collapseDeliveries" class="collapse" aria-labelledby="headingDeliveries">
+                                    <div class="card-body">
+                                        <div *ngIf="!hasDeliveries">
+                                            <app-display-field
+                                                labelText="Sem tentativas de entrega"></app-display-field>
+                                        </div>
+                                        <div class="card" *ngIf="hasDeliveries">
+                                            <div class="card-body">
+                                                <app-table
+                                                    [headers]="['Início', 'Última atualização', 'Entregador', 'Cnpj do Entregador', 'Status' ]"
+                                                    [property]="['createDate | customDate', 'updateDate | customDate', 'userName', 'userCnpj', 'formattedStatus' ]"
+                                                    [data]='order.deliveries' />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-header" id="headingNotify">
+                                    <h5 class="mb-0">
+                                        <div class="btn-toolbar" style="cursor: pointer;" data-bs-toggle="collapse"
+                                            data-bs-target="#collapseNotifications" aria-expanded="true"
+                                            aria-controls="collapseNotifications">
+                                            <button class="btn btn-toolbar  " type="button">
+                                                Notificações de pedido
+                                            </button>
+                                        </div>
+                                    </h5>
+                                </div>
+                                <div id="collapseNotifications" class="collapse" aria-labelledby="headingNotify">
+                                    <div class="card-body">
+                                        <div *ngIf="!hasNotifications">
+                                            <app-display-field
+                                                labelText="Sem notificações do pedido"></app-display-field>
+                                        </div>
+                                        <div class="card" *ngIf="hasNotifications">
+                                            <div class="card-body">
+                                                <app-table [headers]="['Entregador', 'Cnpj', 'Data da notificação' ]"
+                                                    [property]="['userName', 'userCnpj', 'notificationDate | customDate' ]"
+                                                    [data]='order.notifications' />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </app-col>
+                </app-row>
+            </app-grid>
+        </div>
+    </div>
+</div>

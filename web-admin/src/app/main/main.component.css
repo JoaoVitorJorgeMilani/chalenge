@@ -1,7 +1,6 @@
-
 /* Mottu palette colors */
 .navbar-custom {
-  background-color: var(--mottu-color-black);  
+  background-color: var(--mottu-color-black);
 }
 
 .navbar-brand {
@@ -12,7 +11,6 @@
 .navbar-custom .navbar-brand,
 .navbar-custom .navbar-text {
   color: var(--mottu-color-accent);
-  
 }
 
 .nav-link {
@@ -27,4 +25,3 @@
 .content {
   padding: 0px;
 }
-

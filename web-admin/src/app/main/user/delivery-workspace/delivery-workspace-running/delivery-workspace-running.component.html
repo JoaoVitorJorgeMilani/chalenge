@@ -1,0 +1,30 @@
+<app-spinner [loading]="loading"></app-spinner>
+<app-modal #modal modalType="confirmation" (onAccept)="modalOnAccept()"></app-modal>
+
+<div *ngIf="_deliveringOrder">
+    <app-alert #alert></app-alert>
+    <div class="card">
+        <h6 class="card-header">Entregando Pedido!</h6>
+        <div class="card-body">
+            <app-alert #alert></app-alert>
+            <app-grid>
+                <app-row>
+                    <app-col col_span="6">
+                        <p>Indentificador: <span class="badge bg-primary">{{ this._deliveringOrder.identifier }}</span>
+                        <p>
+                    </app-col>
+                    <app-col col_span="6">
+                        <p>Valor: <span class="badge bg-primary">{{ this._deliveringOrder.formattedFare }}</span>
+                        <p>
+                    </app-col>
+                </app-row>
+                <app-row customClasses="justify-content-md-center" customStyles="padding-top: 10px;">
+                    <app-col col_span="6">
+                        <button type="button" class="btn btn-outline-danger " (click)="onDecline()">Cancelar
+                            Entrega</button>
+                    </app-col>
+                </app-row>
+            </app-grid>
+        </div>
+    </div>
+</div>

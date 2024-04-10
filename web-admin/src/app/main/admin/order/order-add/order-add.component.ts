@@ -1,57 +1,57 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { OrderService } from '../order.service';
+import { AlertComponent } from 'src/app/shared/alert/alert.component';
 
 @Component({
   selector: 'app-order-add',
   templateUrl: './order-add.component.html',
 })
 export class OrderAddComponent {
-  
-  errorMessages: string[] = [];
-  get showError() : boolean { return this.errorMessages.length > 0 };
-  showSuccess : boolean = false;
+
+  @ViewChild(AlertComponent) alert!: AlertComponent;
 
   order = {
     identifier: '',
-    fare : 0
+    fare: 0
   }
 
-  constructor(private service : OrderService){}
-  
-  onSubmit(){    
-    if(this.validate()){
+  constructor(private service: OrderService) { }
+
+  onSubmit() {
+    this.alert.clear();
+    if (this.validate()) {
       this.service.add(this.order).subscribe(
         {
-          next: data => {
-            this.errorMessages = [];
-            this.showSuccess = true;
+          next: () => {
+            this.alert.clear();
+            this.alert.addSuccessMessage('Salvo com sucesso!');
           },
           error: error => {
-            console.log("ERROR");
-            console.log(error);
-            if(error.error)
-              this.errorMessages.push(error.error);
+            this.alert.clear();
+            if (error.error)
+              this.alert.addErrorMessage(error.error);
             else
-              this.errorMessages.push("Erro ao realizar a operação, contate o administrador");
+              this.alert.addErrorMessage("Erro ao realizar a operação, contate o administrador");
           }
         }
       );
-    }   
+    }
   }
 
-  validate() : boolean {
-    console.log("validating");
-    console.log
-    this.errorMessages = [];
-    
-    if(!this.order.identifier || this.order.identifier.length < 10) {
-      this.errorMessages.push('O identificador é obrigatório');
+  validate(): boolean {
+    var valid = true;
+    this.alert.clear();
+
+    if (!this.order.identifier || this.order.identifier.length <= 0) {
+      this.alert.addErrorMessage('O identificador é obrigatório');
+      valid = false;
     }
 
     if (!this.order.fare || isNaN(this.order.fare)) {
-      this.errorMessages.push('O valor é obrigatorio');
+      this.alert.addErrorMessage('O valor é obrigatorio');
+      valid = false;
     }
 
-    return this.errorMessages.length == 0;
+    return valid;
   }
 }

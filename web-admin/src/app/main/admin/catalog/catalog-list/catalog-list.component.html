@@ -5,18 +5,7 @@
   <div *ngIf="!isEditing">
     <app-row>
       <app-col col_span="12">
-        <div class="alert alert-danger" role="alert" *ngIf="showError">
-          <ul>
-            <li *ngFor="let erro of errorMessages">{{ erro }}</li>
-          </ul>
-      
-        </div>
-        <div class="alert alert-success" role="alert" *ngIf="showSuccess">
-          <ul>
-            <li>{{ sucessMessage }}</li>
-          </ul>
-      
-        </div>
+        <app-alert #alert></app-alert>
       </app-col>
     </app-row>
     <app-row>
@@ -26,14 +15,13 @@
             <app-col col_span="12">
               <app-table [headers]="['Identificador', 'Ano', 'Modelo', 'Placa']"
                 [property]="['identifier', 'manufacturingYear', 'bikeModel', 'licensePlate']" [data]='data'
-                [enableActionDelete]="true" (deleteItem)="deleteItem($event)" 
-                [enableActionEdit]="true"   (editItem)="editItem($event)" 
-                />
+                [enableActionDelete]="true" (deleteItem)="deleteItem($event)" [enableActionEdit]="true"
+                (editItem)="editItem($event)" />
             </app-col>
           </app-row>
         </app-grid>
       </app-col>
     </app-row>
   </div>
-  
+
 </app-grid>

@@ -9,18 +9,17 @@ import { Observable } from 'rxjs';
 export class OrderService {
 
   baseUrl = environment.apiUrl;
-  
-  constructor(private httpClient: HttpClient) { }
-
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   }
 
+  constructor(private httpClient: HttpClient) { }
+
   add(order: any): Observable<any> {
-    return this.httpClient.post<any>(`${this.baseUrl}/order/add`, order, this.httpOptions);   
+    return this.httpClient.post<any>(`${this.baseUrl}/order/add`, order, this.httpOptions);
   }
 
   getList(): Observable<any> {
-    return this.httpClient.get(`${this.baseUrl}/order/list`, this.httpOptions);   
+    return this.httpClient.get(`${this.baseUrl}/order/list`, this.httpOptions);
   }
 }

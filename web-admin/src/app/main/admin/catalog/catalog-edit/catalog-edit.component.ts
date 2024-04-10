@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { AlertComponent } from 'src/app/shared/alert/alert.component';
 import { CatalogService } from '../catalog.service';
 
 @Component({
@@ -6,12 +7,10 @@ import { CatalogService } from '../catalog.service';
   templateUrl: './catalog-edit.component.html',
 })
 export class CatalogEditComponent {
-  
-  constructor(private service : CatalogService){}
-  errorMessages: string[] = [];
-  
-  get showError() : boolean { return this.errorMessages.length > 0 };
-  showSuccess : boolean = false;
+
+  @ViewChild(AlertComponent) alert!: AlertComponent;
+
+  constructor(private service: CatalogService) { }
 
   @Input() bikeEdit = {
     identifier: '',
@@ -22,36 +21,40 @@ export class CatalogEditComponent {
 
   @Output() closeEdit = new EventEmitter<any>();
 
-  onBack(){
+  onBack() {
     this.closeEdit.emit();
 
   }
-  onSubmit(){
-    if(this.validate()){
+  onSubmit() {
+    this.alert.clear();
+    if (this.validate()) {
       this.service.edit(this.bikeEdit).subscribe(
         {
-          next: data => {
-            this.errorMessages = [];
-            this.showSuccess = true;
+          next: () => {
+            this.alert.clear();
+            this.alert.addSuccessMessage('Editado com sucesso!');
           },
           error: error => {
-            this.errorMessages.push(error.error);
+            this.alert.clear();
+            this.alert.addErrorMessage(error.error);
           }
         }
       );
-    }   
-  }
-
-  validate() : boolean {
-    this.errorMessages = [];
-
-    if(!this.bikeEdit.licensePlate || this.bikeEdit.licensePlate.length != 7) {
-      this.errorMessages.push('O número da placa com 7 caracteres é obrigatório ');
     }
-    return this.errorMessages.length == 0;
   }
 
-  
+  validate(): boolean {
+    this.alert.clear();
 
-  
+    if (!this.bikeEdit.licensePlate || this.bikeEdit.licensePlate.length != 7) {
+      this.alert.addErrorMessage('O número da placa com 7 caracteres é obrigatório');
+      return false;
+    }
+
+    return true;
+  }
+
+
+
+
 }

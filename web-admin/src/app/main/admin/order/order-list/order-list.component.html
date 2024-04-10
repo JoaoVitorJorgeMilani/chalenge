@@ -1,11 +1,13 @@
 <app-grid>
+  <app-alert></app-alert>
   <app-row>
     <app-col col_span="12">
       <app-grid customClasses="justify-content-md-center">
         <app-row customClasses="mt-3">
           <app-col col_span="12">
-            <app-table [headers]="['Identificador', 'Valor']" [property]="['identifier', 'fare | customCurrency' ]"
-              [data]='data' />
+            <app-table [headers]="['Identificador', 'Valor', 'Status' ]"
+              [property]="['identifier', 'fare | customCurrency', 'formattedStatus' ]" [data]='orders'
+              [enableActionView]="true" (viewItem)="onViewingOrder($event)" />
           </app-col>
         </app-row>
       </app-grid>
