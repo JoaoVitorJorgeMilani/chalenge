@@ -1,0 +1,12 @@
+
+<div class="side-nav-content">
+  <ul class="nav-list container">
+    <li class="nav-list-item" *ngFor="let option of options">
+        <i class="{{option.icon}}"></i>
+        <span>
+          <a class="link" [routerLink]="option.route">{{option.name}}</a>
+        </span>
+    </li>
+    
+  </ul>
+</div>

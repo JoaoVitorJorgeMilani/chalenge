@@ -1,0 +1,30 @@
+
+/* Mottu palette colors */
+.navbar-custom {
+  background-color: var(--mottu-color-black);  
+}
+
+.navbar-brand {
+  margin-left: 5px;
+  font-size: 23px;
+}
+
+.navbar-custom .navbar-brand,
+.navbar-custom .navbar-text {
+  color: var(--mottu-color-accent);
+  
+}
+
+.nav-link {
+  margin-left: 5px;
+  color: var(--mottu-color-light-text);
+}
+
+.nav-item a:hover {
+  color: var(--mottu-color-hover);
+}
+
+.content {
+  padding: 0px;
+}
+

@@ -1,0 +1,38 @@
+<app-grid>
+    <app-row customStyles="padding: 0px;">
+        <app-col col_span="12">
+            <div class="table-responsive ">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th *ngFor="let header of headers" scope="col">{{header}}</th>
+                            <th *ngIf="enableActions" scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let datum of data">
+                            <!-- <td *ngFor="let prop of property">{{datum[prop]}}</td> -->
+                            <td *ngFor="let prop of property">
+                                <ng-container *ngIf="isCurrencyProperty(prop); else nonCurrency">
+                                    {{ datum[getProperty(prop)] | customCurrency }}                                    
+                                </ng-container>
+                                <ng-template #nonCurrency>
+                                    {{ datum[getProperty(prop)] }}
+                                </ng-template>
+                            </td>
+
+                            <td *ngIf="enableActions">
+                                <button *ngIf="enableActionView" type="button" class="btn btn-primary"><i
+                                        class="fa fa-eye"></i></button>
+                                <button *ngIf="enableActionEdit" (click)="onEdit(datum)" type="button" class="btn btn-success"><i
+                                        class="fa fa-edit"></i></button>
+                                <button *ngIf="enableActionDelete" (click)="onDelete(datum)" type="button" class="btn btn-danger"><i
+                                        class="fa fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>            
+        </app-col>
+    </app-row>
+</app-grid>
