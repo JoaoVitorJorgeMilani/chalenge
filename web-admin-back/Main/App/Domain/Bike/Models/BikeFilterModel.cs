@@ -33,7 +33,8 @@ namespace Main.App.Domain.Bike
                 filters.Add(Builders<Bike>.Filter.Eq(x => x.LicensePlate, LicensePlate));
             }
 
-            if(filters.Count <= 0){
+            if (filters.Count <= 0)
+            {
                 return Builders<Bike>.Filter.Empty;
             }
             return Builders<Bike>.Filter.And(filters);

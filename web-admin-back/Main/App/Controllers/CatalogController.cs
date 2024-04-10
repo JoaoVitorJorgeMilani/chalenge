@@ -17,12 +17,12 @@ public class CatalogController : ControllerBase
     [Route("add")]
     public IResult Add(Bike bike)
     {
-        try 
+        try
         {
             service.Add(bike);
             return Results.Created("", bike);
-        } 
-        catch (ValidationException ex ) 
+        }
+        catch (ValidationException ex)
         {
             return Results.BadRequest(ex.Message);
         }
@@ -39,7 +39,7 @@ public class CatalogController : ControllerBase
     [Route("delete")]
     public IResult Delete([FromQuery] string encryptedId)
     {
-        if(this.service.Delete(encryptedId))
+        if (this.service.Delete(encryptedId))
         {
             return Results.Accepted();
         }
@@ -47,19 +47,19 @@ public class CatalogController : ControllerBase
         {
             return Results.NotFound("Bike not found");
         }
-        
+
     }
 
     [HttpPut]
     [Route("edit")]
     public IResult Edit([FromQuery] string encryptedId, [FromQuery] string licensePlate)
     {
-        try 
+        try
         {
             service.Edit(encryptedId, licensePlate);
             return Results.Accepted();
-        } 
-        catch (ValidationException ex ) 
+        }
+        catch (ValidationException ex)
         {
             return Results.BadRequest(ex.Message);
         }

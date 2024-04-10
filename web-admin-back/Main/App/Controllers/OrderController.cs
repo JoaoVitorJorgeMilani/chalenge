@@ -15,20 +15,21 @@ public class OrderController : ControllerBase
 
     [HttpPost]
     [Route("add")]
-    public IResult Add(Order order)
+    public IResult Add(OrderEntity order)
     {
         try
         {
-            if(service.Add(order))
+            if (service.Add(order))
             {
                 return Results.Created("", order);
             }
-            return Results.UnprocessableEntity(null);            
-        } 
-        catch (ValidationException ex ) 
+            return Results.UnprocessableEntity(null);
+        }
+        catch (ValidationException ex)
         {
             return Results.BadRequest(ex.Message);
-        } catch (Exception)
+        }
+        catch (Exception)
         {
             return Results.StatusCode(StatusCodes.Status500InternalServerError);
         }
@@ -41,7 +42,75 @@ public class OrderController : ControllerBase
         return service.Get(filter);
     }
 
+    [HttpGet]
+    [Route("available")]
+    public async Task<List<OrderDto>> GetAvailableOrders()
+    {
+        return await service.GetAvailableOrders();
+    }
 
+    [HttpPut]
+    [Route("accept")]
+    public async Task<ActionResult<OrderDto>> AcceptOrder([FromQuery] string orderId, [FromQuery] string userId)
+    {
+        try
+        {
+            OrderDto order = await service.AcceptOrder(orderId, userId);
+            return Ok(order);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ex.Message);
+
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
+
+    }
+
+    [HttpPut]
+    [Route("decline")]
+    public async Task<IResult> DeclineOrder([FromQuery] string orderId, [FromQuery] string userId)
+    {
+        try
+        {
+            await service.DeclineOrder(orderId, userId);
+            return Results.Ok();
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Results.Conflict(ex.Message);
+
+        }
+        catch (Exception)
+        {
+            return Results.StatusCode(StatusCodes.Status500InternalServerError);
+        }
+
+    }
+
+    [HttpGet]
+    [Route("delivering")]
+    public async Task<ActionResult<OrderDto>> GetDeliveringOrder([FromQuery] string encryptedOrderId)
+    {
+        try
+        {
+            OrderDto order = await service.GetById(encryptedOrderId);
+            return Ok(order);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ex.Message);
+
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
+
+    }
 
 
 }

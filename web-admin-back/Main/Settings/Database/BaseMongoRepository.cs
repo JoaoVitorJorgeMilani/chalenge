@@ -37,6 +37,22 @@ namespace Main.Settings.Database
          return collection.UpdateOne(filter, update);
       }
 
+      public virtual Task<UpdateResult> UpdateOneAsync(FilterDefinition<T> filter, UpdateDefinition<T> update)
+      {
+         update = update.Set("UpdateDate", DateTime.Now);
+         return collection.UpdateOneAsync(filter, update);
+      }
+
+      public virtual async Task<T> UpdateOneAndGetAsync(FilterDefinition<T> filter, UpdateDefinition<T> update)
+      {
+         update = update.Set("UpdateDate", DateTime.Now);
+         var options = new FindOneAndUpdateOptions<T>
+         {
+            ReturnDocument = ReturnDocument.After
+         };
+         return await collection.FindOneAndUpdateAsync(filter, update, options);
+      }
+
       public virtual T FindOneAndUpdate(FilterDefinition<T> filter, UpdateDefinition<T> update, FindOneAndUpdateOptions<T> options)
       {
          update = update.Set("UpdateDate", DateTime.Now);
@@ -48,6 +64,11 @@ namespace Main.Settings.Database
          return collection.Find(filter).FirstOrDefault();
       }
 
+      public virtual Task<T> FindFirstAsync(FilterDefinition<T> filter)
+      {
+         return collection.Find(filter).FirstAsync();
+      }
+
       public virtual void InsertOne(T entity)
       {
          collection.InsertOne(entity);
@@ -56,6 +77,11 @@ namespace Main.Settings.Database
       public virtual IFindFluent<T, T> Find(FilterDefinition<T> filter)
       {
          return collection.Find(filter);
+      }
+
+      public virtual Task<IAsyncCursor<T>> FindAsync(FilterDefinition<T> filter)
+      {
+         return collection.FindAsync(filter);
       }
 
       public virtual DeleteResult DeleteOne(FilterDefinition<T> filter)
