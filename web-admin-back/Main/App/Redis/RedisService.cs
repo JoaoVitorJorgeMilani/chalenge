@@ -8,54 +8,60 @@ namespace Main.App.Redis
     public class RedisService
     {
         private readonly RedisConnectionService _redisConnectionService;
-        // private readonly IConnectionMultiplexer _redis;
         private readonly ILogger<RedisService> _logger;
-        private readonly IDatabase _database;
+        private IDatabase? _database;
+
+        private IDatabase Database 
+        { 
+            get => _database ??= GetDatabase(); 
+            set => _database = value; 
+        }
+
         private const string ConnectedUsersHashKey = "connectedUsers";
 
         public RedisService(ILogger<RedisService> logger, RedisConnectionService redisConnectionService)
         {
             _redisConnectionService = redisConnectionService;
-            // _redis = redisConnectionService.GetConnection();
-            _database = redisConnectionService.GetDatabase();
             _logger = logger;
+            _database = redisConnectionService.GetDatabase();
+
         }
 
         public void AddUser(string userId, string connectionId)
         {
             _logger.LogInformation(" AddUser() | UserId: {UserId} | ConnectionId: {ConnectionId}", userId, connectionId);
-            _database.HashSet(ConnectedUsersHashKey, connectionId, userId);
+            Database.HashSet(ConnectedUsersHashKey, connectionId, userId);
         }
 
         public void RemoveUser(string connectionId)
         {
             _logger.LogInformation(" RemoveUser() | ConnectionId: {ConnectionId}", connectionId);
-            _database.HashDelete(ConnectedUsersHashKey, connectionId);
+            Database.HashDelete(ConnectedUsersHashKey, connectionId);
         }
 
         public string? GetConnectionId(string userId)
         {
             _logger.LogInformation(" GetConnectionId() | UserId: {UserId}", userId);
-            return _database.HashKeys(ConnectedUsersHashKey)
+            return Database.HashKeys(ConnectedUsersHashKey)
                 .ToStringArray()
                 .FirstOrDefault(key =>
-                    _database.HashGet(ConnectedUsersHashKey, key).ToString() == userId
+                    Database.HashGet(ConnectedUsersHashKey, key).ToString() == userId
                 );
         }
 
         public IEnumerable<string> GetAllConnectionIds()
         {
 
-            if(_database == null || _database.HashKeys(ConnectedUsersHashKey) == null)
+            if(Database == null || Database.HashKeys(ConnectedUsersHashKey) == null)
                 return Enumerable.Empty<string>();
     
-            return _database.HashKeys(ConnectedUsersHashKey).ToStringArray()
-                .Select(connectionIdKey => _database.HashGet(ConnectedUsersHashKey, connectionIdKey).ToString());
+            return Database.HashKeys(ConnectedUsersHashKey).ToStringArray()
+                .Select(connectionIdKey => Database.HashGet(ConnectedUsersHashKey, connectionIdKey).ToString());
         }
 
         public IEnumerable<string> GetAllConnectedUsers()
         {
-            return _database.HashValues(ConnectedUsersHashKey)
+            return Database.HashValues(ConnectedUsersHashKey)
                 .ToStringArray()
                 .Where(userId => !string.IsNullOrEmpty(userId))
                 .Select(userId => userId!);
@@ -64,7 +70,24 @@ namespace Main.App.Redis
         public void Dispose()
         {
             _logger.LogInformation(" Disposing");
-            _database.Execute("FLUSHDB");
+            Database.Execute("FLUSHDB");
+        }
+
+        private IDatabase GetDatabase()
+        {
+            try
+            {
+                if(_database != null)
+                    return _database;
+
+                _database = _redisConnectionService.GetDatabase();
+                return _database;
+            } 
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while connecting to Redis.");
+                throw;
+            }
         }
     }
 }
