@@ -46,7 +46,7 @@ namespace Main.App.Redis
             catch (OperationCanceledException)
             {
                 _logger.LogWarning("Connection attempt to Redis was canceled.");
-                return null;
+                throw new Exception("Connection attempt to Redis was canceled.");
             }
             catch (Exception ex)
             {
@@ -59,7 +59,20 @@ namespace Main.App.Redis
 
         private IConnectionMultiplexer GetConnection()
         {
-            return (_redis != null) ? _redis : Connect();
+            if(_redis != null)
+                return _redis;
+
+            try{
+
+               return Connect();
+
+            } 
+            catch (Exception)
+            {
+                throw;
+            }
+            
+
         }
 
 
@@ -72,13 +85,15 @@ namespace Main.App.Redis
 
         public IDatabase GetDatabase()
         {
-            var connection = GetConnection();
-            if (connection == null)
+            try
             {
-                _logger.LogError("Failed to establish connection to Redis.");
-                return null;
+                var connection = GetConnection();
+                return connection.GetDatabase();
+            } 
+            catch (Exception)
+            {
+                throw;
             }
-
-        return connection.GetDatabase();        }
+        }
     }
 }
