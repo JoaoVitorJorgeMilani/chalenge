@@ -1,0 +1,43 @@
+.side-nav-content {
+  color: var(--mottu-color-light-text);
+  height: 100vh;
+  margin-left: 0px;
+}
+
+.nav-list {
+  list-style: none;
+  padding: 0%;
+  /* height: 100%; */
+}
+
+.nav-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+}
+
+.nav-list-item i {
+  font-size: 20px;
+  padding: 10px;
+  margin-left: 15px;
+}
+
+.nav-list-item span {
+  width: 100%;
+  text-transform: capitalize;
+}
+
+a {
+  text-decoration: none;
+  color: var(--mottu-color-light-text);
+}
+
+.nav-list-item:hover i,
+.nav-list-item:hover a {
+  color: var(--mottu-color-hover);
+}
+
+.nav-list-item:hover {
+  background-color: var(--mottu-color-hover-background);
+}

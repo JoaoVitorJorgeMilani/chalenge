@@ -1,0 +1,16 @@
+<app-grid>
+    <app-row>
+      <app-col col_span="12">
+        <app-grid customClasses="justify-content-md-center">
+          <app-row customClasses="mt-3">
+            <app-col col_span="12">
+              <app-table 
+                [headers]="['Nome', 'Cnpj', 'Cnh', 'Data Nascimento']" 
+                [property]="['name', 'cnpj', 'cnh', 'birthday' ]"
+                [data]='data' />
+            </app-col>
+          </app-row>
+        </app-grid>
+      </app-col>
+    </app-row>
+  </app-grid>

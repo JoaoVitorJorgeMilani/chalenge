@@ -1,0 +1,25 @@
+<div class="card">
+  <h5 class="card-header">Bike Catalog</h5>
+  <div class="card-body">
+    <app-grid customClasses="justify-content-md-center">
+      <app-row>
+        <app-col col_span="12">
+          <ul class="nav nav-tabs">
+            <li class="nav-item">
+              <a class="nav-link" [class.active]="activeTab === 'list'" (click)="activateTab('list')">List</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" [class.active]="activeTab === 'add'" (click)="activateTab('add')">Add</a>
+            </li>
+          </ul>
+        </app-col>
+      </app-row>
+      <app-row>
+        <app-col col_span="12">
+          <app-catalog-list *ngIf="activeTab === 'list'"></app-catalog-list>
+          <app-catalog-add *ngIf="activeTab === 'add'"></app-catalog-add>
+        </app-col>
+      </app-row>
+    </app-grid>
+  </div>
+</div>
