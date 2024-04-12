@@ -11,7 +11,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let datum of data">
+                        <tr *ngFor="let datum of data" [ngClass]="{ 'table-danger': showDataDanger(datum) }">
                             <td *ngFor="let prop of property">
                                 <ng-container *ngIf="isCurrencyProperty(prop)">
                                     {{ datum[getProperty(prop)] | customCurrency }}                                    
@@ -22,6 +22,12 @@
                                 <ng-container *ngIf="hasNoProperty(prop)" #default>
                                     {{ datum[getProperty(prop)] }}
                                 </ng-container>
+                            </td>
+
+                            <td colspan="3" >
+                                <div class="alert alert-danger" role="alert" *ngIf="showDataDanger(datum)">
+                                    {{ getAlertMessage(datum) }}
+                                </div>
                             </td>
 
                             <td *ngIf="enableActions">

@@ -44,10 +44,10 @@ namespace Main.App.Domain.User
 
 
         [BsonIgnore]
-        private List<Delivery>? deliveries;
+        private List<Delivery>? deliveries { get; set; }
 
         [BsonIgnore]
-        private ObjectId? deliveringOrder;
+        private ObjectId? deliveringOrder { get; set; }
 
 
     }
