@@ -11,6 +11,7 @@ export class TableComponent  {
   @Input() headers: string[] = [];
   @Input() property: string[] = [];
   @Input() data: any[] = [];
+  
   @Input() customActionIcon: string = 'fa fa-question-circle-o';
   @Input() customActionClass: string = 'btn btn-primary';
   @Input() customActionText: string = '';
@@ -18,6 +19,10 @@ export class TableComponent  {
   @Input() enableActionEdit: boolean = false;
   @Input() enableActionDelete: boolean = false;
   @Input() enableCustomAction: boolean = false;
+  @Input() enableAlertInLine: boolean = false;
+  @Input() alertConditionProperty: string = '';
+  @Input() alertMessage: string = '';
+
   
 
   @Output() deleteItem = new EventEmitter<any>();
@@ -63,4 +68,11 @@ export class TableComponent  {
     this.customAction.emit(item);
   }
 
+  showDataDanger(item: any): boolean {
+    return this.enableAlertInLine && item[this.alertConditionProperty];
+  }
+
+  getAlertMessage(item: any): string {
+    return item.alertMessage ? item.alertMessage : this.alertMessage ? this.alertMessage : '';
+  }
 }
