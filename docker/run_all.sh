@@ -1,0 +1,10 @@
+cd mongodb
+bash run_mongodb.sh
+cd ../rabbitmq
+bash run_rabbitmq.sh
+cd ../redis
+bash run_redis.sh
+cd ../web-admin
+bash run_web-admin.sh
+cd ../web-admin-back
+bash ./run_web-admin-back.sh
