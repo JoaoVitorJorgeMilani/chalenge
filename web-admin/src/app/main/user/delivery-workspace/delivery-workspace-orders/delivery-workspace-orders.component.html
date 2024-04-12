@@ -11,9 +11,16 @@
           <app-grid customClasses="justify-content-md-center">
             <app-row customClasses="mt-3">
               <app-col col_span="12">
-                <app-table [headers]="['Identificador', 'Valor']" [property]="['identifier', 'fare | customCurrency']"
-                  [data]='data' [enableCustomAction]="true" customActionIcon="fa fa-motorcycle"
-                  (customAction)="deliveryOrder($event)" customActionText="Entregar pedido" />
+                <app-table [headers]="['Identificador', 'Valor']" 
+                  [property]="['identifier', 'fare | customCurrency']"
+                  [data]='data' 
+                  [enableCustomAction]="true" 
+                  customActionIcon="fa fa-motorcycle"
+                  (customAction)="deliveryOrder($event)" customActionText="Entregar pedido"
+                  [enableAlertInLine]='true'
+                  alertConditionProperty="alreadyTryToDelivery"
+                  alertMessage="Você já tentou entregar este pedido"
+                />
               </app-col>
             </app-row>
           </app-grid>

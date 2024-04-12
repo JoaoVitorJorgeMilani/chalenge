@@ -2,6 +2,7 @@ import { AfterViewInit, Component, EventEmitter, OnInit, Output, ViewChild } fro
 import { AlertComponent } from 'src/app/shared/alert/alert.component';
 import { ModalComponent } from 'src/app/shared/modal/modal.component';
 import { DeliveryService } from '../delivery.service';
+import { AuthService } from 'src/app/shared/auth/auth.service';
 
 @Component({
   selector: 'app-delivery-workspace-orders',
@@ -17,7 +18,7 @@ export class DeliveryWorkspaceOrdersComponent implements OnInit, AfterViewInit {
 
   @Output() onDeliveryAccepted = new EventEmitter<any>();
 
-  constructor(private service: DeliveryService) { }
+  constructor(private service: DeliveryService, private authService: AuthService) { }
 
   ngOnInit(): void {
     this.loadRefreshList();
@@ -34,7 +35,7 @@ export class DeliveryWorkspaceOrdersComponent implements OnInit, AfterViewInit {
     this.service.getAvailableOrders().subscribe(
       {
         next: (data) => {
-          this.data = data;
+          this.formatOrders(data);
           this.loading = false;
         },
         error: async (error) => {
@@ -48,8 +49,14 @@ export class DeliveryWorkspaceOrdersComponent implements OnInit, AfterViewInit {
   }
 
   deliveryOrder(event: any) {
-    this.selectedOrder = event;
-    this.openModal();
+    if(event.alreadyTryToDelivery) {
+      this.alert.clear();
+      this.alert.addErrorMessage("Você já tentou entregar este pedido!");
+    } else {
+      this.selectedOrder = event;
+      this.openModal();
+    }
+    
   }
 
   openModal() {
@@ -74,5 +81,16 @@ export class DeliveryWorkspaceOrdersComponent implements OnInit, AfterViewInit {
         }
       }
     )
+  }
+  
+  formatOrders(data: any) {
+    this.data = data;
+    this.data.forEach((order: any) => {
+      order.deliveries.forEach((delivery: any) => {
+        if(delivery.encryptedUserId == this.authService.getLogedUser().id) {
+          order.alreadyTryToDelivery = true;
+        }
+      })
+    })
   }
 }
