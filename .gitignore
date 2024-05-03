@@ -7,5 +7,4 @@ web-admin-back/bin
 web-admin-back/obj
 
 # IDE
-.vscode/launch.json
-.vscode/tasks.json
+.vscode/
